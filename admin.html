@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Сторінка адміністратора</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="script.js"></script>
+</head>
+<body class="admin">
+  <h1>Ласкаво просимо на сторінку адміністратора</h1>
+  <select id="postType">
+    <option value="photo">Фото</option>
+    <option value="video">Відео</option>
+    <option value="youtube">YouTube</option>
+  </select>
+  <input type="text" id="postUrl" placeholder="Посилання на фото, відео або YouTube">
+  <textarea id="postMessage" placeholder="Повідомлення"></textarea>
+  <button onclick="publishPost()">Опублікувати</button>
+
+  <h2>Пости на головній сторінці:</h2>
+  <div id="postsList"></div>
+
+  <script>
+    // Отримання збереженої інформації з Local Storage
+    var savedPosts = localStorage.getItem('posts');
+    if (savedPosts) {
+      var posts = JSON.parse(savedPosts);
+      renderPosts(posts);
+    }
+
+    function publishPost() {
+      var postType = document.getElementById('postType').value;
+      var postUrl = document.getElementById('postUrl').value;
+      var postMessage = document.getElementById('postMessage').value;
+
+      var post = {
+        type: postType,
+        url: postUrl,
+        message: postMessage
+      };
+
+      var savedPosts = localStorage.getItem('posts');
+      var posts = savedPosts ? JSON.parse(savedPosts) : [];
+      posts.push(post);
+      localStorage.setItem('posts', JSON.stringify(posts));
+
+      renderPosts(posts);
+
+      alert('Оголошення опубліковано. Оновіть головну сторінку для перегляду.');
+    }
+
+    function deletePost(index) {
+      var savedPosts = localStorage.getItem('posts');
+      var posts = savedPosts ? JSON.parse(savedPosts) : [];
+
+      if (index >= 0 && index < posts.length) {
+        posts.splice(index, 1);
+        localStorage.setItem('posts', JSON.stringify(posts));
+        renderPosts(posts);
+        alert('Пост видалено.');
+      } else {
+        alert('Неприпустимий індекс поста.');
+      }
+    }
+
+    function renderPosts(posts) {
+      var postsList = document.getElementById('postsList');
+      postsList.innerHTML = '';
+
+      for (var i = 0; i < posts.length; i++) {
+        var post = posts[i];
+        var postDiv = document.createElement('div');
+        postDiv.classList.add('post');
+
+        if (post.type === 'photo') {
+          var photoImg = document.createElement('img');
+          photoImg.src = post.url;
+          postDiv.appendChild(photoImg);
+        } else if (post.type === 'video') {
+          var videoPlayer = document.createElement('video');
+          videoPlayer.src = post.url;
+          videoPlayer.controls = true;
+          postDiv.appendChild(videoPlayer);
+        } else if (post.type === 'youtube') {
+          var youtubeFrame = document.createElement('iframe');
+          youtubeFrame.src = post.url;
+          youtubeFrame.setAttribute('allowfullscreen', true);
+          youtubeFrame.setAttribute('frameborder', 0);
+          postDiv.appendChild(youtubeFrame);
+        }
+
+        var messagePara = document.createElement('p');
+        messagePara.textContent = post.message;
+        postDiv.appendChild(messagePara);
+
+        var deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Видалити';
+        deleteButton.setAttribute('onclick', 'deletePost(' + i + ')');
+        postDiv.appendChild(deleteButton);
+
+        postsList.appendChild(postDiv);
+      }
+    }
+  </script>
+</body>
+</html>

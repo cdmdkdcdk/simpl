@@ -1,134 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>новини</title>
-  <style>
-    body {
-      background-color: #F6F6F6;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    
-    h1 {
-      color: #002D72;
-      text-align: center;
-      padding: 20px;
-      margin: 0;
-      background-image: url("шлях_до_зображення.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-    
-    .news-container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background-color: #FFFFFF;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    
-    .news-item {
-      margin-bottom: 20px;
-      padding: 10px;
-      background-color: #FFFFFF;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    
-    .news-title {
-      font-weight: bold;
-      font-size: 24px;
-      color: #002D72;
-      margin-bottom: 10px;
-    }
-    
-    .news-content {
-      color: #555555;
-    }
-    
-    a {
-      color: #002D72;
-      text-decoration: none;
-    }
-    
-    a:hover {
-      text-decoration: underline;
-    }
-    
-    .button {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #002D72;
-      color: #FFFFFF;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-    
-    .button:hover {
-      background-color: #001F48;
-    }
-    
-    h2 {
-      color: #002D72;
-      font-size: 20px;
-      margin-top: 20px;
-      margin-bottom: 10px;
-    }
-    
-    ul {
-      margin: 0;
-      padding: 0;
-      list-style-type: none;
-    }
-    
-    li {
-      margin-bottom: 10px;
-    }
-    
-    ul.checkmark li:before {
-      content: "✓";
-      margin-right: 5px;
-      color: #002D72;
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #CCCCCC;
-    }
-    
-    th {
-      background-color: #F6F6F6;
-      font-weight: bold;
-    }
-  </style>
+  <title>Головна сторінка</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="script.js"></script>
 </head>
 <body>
-  <h1 class="site-title">
-    новини
-  </h1>
+  <h1>Ласкаво просимо на головну сторінку</h1>
+  <div id="content"></div>
 
+  <script>
+    // Отримання збереженої інформації з Local Storage
+    var savedPosts = localStorage.getItem('posts');
+    if (savedPosts) {
+      var posts = JSON.parse(savedPosts);
+      renderPosts(posts);
+    }
+
+    function renderPosts(posts) {
+      var contentDiv = document.getElementById('content');
+      contentDiv.innerHTML = '';
+
+      for (var i = 0; i < posts.length; i++) {
+        var post = posts[i];
+        var postDiv = document.createElement('div');
+        postDiv.classList.add('post');
+
+        if (post.type === 'photo') {
+          var photoImg = document.createElement('img');
+          photoImg.src = post.url;
+          postDiv.appendChild(photoImg);
+        } else if (post.type === 'video') {
+          var videoPlayer = document.createElement('video');
+          videoPlayer.src = post.url;
+          videoPlayer.controls = true;
+          postDiv.appendChild(videoPlayer);
+        }
+
+        var messagePara = document.createElement('p');
+        messagePara.textContent = post.message;
+        postDiv.appendChild(messagePara);
+
+        contentDiv.appendChild(postDiv);
+      }
+    }
+  </script>
 </body>
 </html>
-<div class="news-item">
-  <div class="news-title">Данік лох</div>
-  <div class="news-content">
-   привіт
-   
-  </div>
-  <div class="news-media">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/iV63CGzMAjY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    <img src="https://c.files.bbci.co.uk/1328/production/_109640940_breaking_news_centered_976_ukranian.png"style="width: 200px; height: auto;">
-    <img src="" alt="" style="width: 200px; height: auto;">
-  </div>
->
